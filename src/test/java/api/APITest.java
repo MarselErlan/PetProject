@@ -7,6 +7,8 @@ import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 import org.junit.Assert;
 import org.junit.Test;
+import utilities.CashWiseToken;
+import utilities.Config;
 
 public class APITest {
 
@@ -25,6 +27,23 @@ public class APITest {
         response.prettyPrint();
         String token = response.jsonPath().getString("jwt_token");
         System.out.println(token);
+
+    }
+
+    @Test
+    public void GetSingleSeller(){
+        String url = Config.getProperty("cashWiseAPIUrl") + "api/myaccount/sellers/" + 4623;
+        String token = CashWiseToken.GetToken();
+
+        Response response = RestAssured.given().auth().oauth2(token).get(url);
+//        response.prettyPrint();
+
+        String expectedEmail = response.jsonPath().getString("email");
+        Assert.assertTrue(expectedEmail.endsWith(".com"));
+        Assert.assertNotEquals(null, expectedEmail);
+
+
+
 
     }
 
