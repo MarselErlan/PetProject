@@ -1,10 +1,12 @@
 package api;
 
+import com.github.javafaker.Faker;
 import entities.RequestBody;
 import groovy.json.JsonOutput;
 import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
+import org.checkerframework.checker.units.qual.C;
 import org.junit.Assert;
 import org.junit.Test;
 import utilities.CashWiseToken;
@@ -98,6 +100,45 @@ public class APITest {
         for(String emails : listOfEmails){
             Assert.assertFalse(emails.isEmpty());
         }
+
+    }
+
+    @Test
+    public void CreateSeller(){
+        String url = Config.getProperty("cashWiseAPIUrl") + "/api/myaccount/sellers";
+        String token = CashWiseToken.GetToken();
+
+        RequestBody requestBody = new RequestBody();
+        Faker faker = new Faker();
+
+        for(int i = 0; i < 15; i++) {
+
+            requestBody.setCompany_name(faker.name().title());
+            requestBody.setSeller_name(faker.name().name());
+            requestBody.setEmail(faker.internet().emailAddress());
+            requestBody.setPhone_number(faker.phoneNumber().phoneNumber());
+            requestBody.setAddress(faker.address().fullAddress());
+
+            Response response = RestAssured.given().auth().oauth2(token).contentType(ContentType.JSON)
+                    .body(requestBody).post(url);
+
+            int status = response.statusCode();
+
+            Assert.assertEquals(201, status);
+
+            String id = response.jsonPath().getString("seller_id");
+            String url2 = Config.getProperty("cashWiseAPIUrl") + "/api/myaccount/sellers/" + id;
+
+            Response response1 = RestAssured.given().auth().oauth2(token).get(url2);
+
+            int status2 = response1.getStatusCode();
+
+            Assert.assertEquals(200, status2);
+        }
+
+
+
+
 
     }
 

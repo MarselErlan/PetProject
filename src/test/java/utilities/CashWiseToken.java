@@ -5,6 +5,8 @@ import io.restassured.RestAssured;
 import io.restassured.http.ContentType;
 import io.restassured.response.Response;
 
+import java.util.EnumMap;
+
 public class CashWiseToken {
 
 
@@ -12,8 +14,8 @@ public class CashWiseToken {
 
         String endPoint = "https://backend.cashwise.us/api/myaccount/auth/login";
         RequestBody requestBody = new RequestBody();
-        requestBody.setEmail("isakazy@gmail.com");
-        requestBody.setPassword("isakazyamanbaev");
+        requestBody.setEmail("erxmen.97@gmail.com");
+        requestBody.setPassword("Erlan1824");
 
         Response response = RestAssured.given().contentType(ContentType.JSON)
                 .body(requestBody).post(endPoint);
@@ -22,4 +24,6 @@ public class CashWiseToken {
 
     }
 
+
 }
+
